@@ -22,4 +22,4 @@ Usage
 Demo
 ----
 
-A demo (running `example/`) can be viewed [here](http://jankuca.github.com/dom-feedback).
+A demo (running `example/`) can be viewed [here](http://jankuca.github.com/dom-feedback/example/).
