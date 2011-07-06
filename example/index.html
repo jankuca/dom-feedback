@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Whatever</title>
+	<link rel="stylesheet" type="text/css" href="./screen.css" />
+</head>
+<body>
+
+<h1>Hey, what are you looking at?</h1>
+<div style="padding: 50px 100px;">
+	<h2>Another heading, jeez...</h2>
+	<div id="area">
+		<p>Lorem ipsum...</p>
+		<img src="http://placekitten.com/400/250" />
+		<p>Lorem ipsum...</p>
+		<img src="http://placekitten.com/300/500" />
+	</div>
+	<p>Lorem ipsum...</p>
+</div>
+
+<!-- whatever content -->
+
+<script src="./dom-feedback.js"></script>
+<script>
+(function () {
+
+	var domFeedback = new DOMFeedback();
+
+	var button = document.createElement('span');
+	button.className = 'dom-feedback-button';
+	button.innerHTML = 'Feedback';
+	button.onclick = function () {
+		document.body.removeChild(button);
+		domFeedback.init();
+	};
+	document.body.appendChild(button);
+
+}());
+</script>
+</body>
+</html>

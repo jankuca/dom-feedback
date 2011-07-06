@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<script>
+(function () {
+
+	var origin = location.protocol + '//' + location.host;
+
+	var getOffset = function (el) {
+		var x = 0;
+		var y = 0;
+		do {
+			x += el.offsetLeft;
+			y += el.offsetTop;
+		} while (el = el.offsetParent);
+		return [x, y];
+	};
+	var broadcastEvent = function (e) {
+		var target = e.target;
+		var offset = getOffset(target);
+		var data = {
+			type: e.type,
+			tagName: target.tagName,
+			offsetX: offset[0],
+			offsetY: offset[1],
+			width: target.clientWidth,
+			height: target.clientHeight,
+			x: e.pageX,
+			y: e.pageY
+		};
+		window.parent.postMessage(data, origin);
+	};
+	window.addEventListener('mouseover', broadcastEvent, false);
+	window.addEventListener('click', broadcastEvent, false);
+
+}());
+</script>
+</html>
