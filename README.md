@@ -8,7 +8,9 @@ Currently, it can only select/highlight DOM elements and does not send any actua
 Usage
 -----
 
-    var domFeedback = new DOMFeedback();
+    var domFeedback = new DOMFeedback({
+    	broadcast: '../src/dom-feedback-copy.html'
+    });
 
     var button = document.createElement('span');
     button.className = 'dom-feedback-button';
@@ -22,4 +24,4 @@ Usage
 Demo
 ----
 
-A demo (running `example/`) can be viewed [here](http://jankuca.github.com/dom-feedback/example/).
+A demo (running latest `example/`) can be viewed [here](http://jankuca.github.com/dom-feedback/example/).
