@@ -14,7 +14,7 @@
 		} while (el = el.offsetParent);
 		return [x, y];
 	};
-	var broadcastEvent = function (e) {
+	var broadcastElementEvent = function (e) {
 		var target = e.target;
 		var offset = getOffset(target);
 		var data = {
@@ -29,8 +29,18 @@
 		};
 		window.parent.postMessage(data, origin);
 	};
-	window.addEventListener('mouseover', broadcastEvent, false);
-	window.addEventListener('click', broadcastEvent, false);
+	var broadcastCursorEvent = function (e) {
+		var data = {
+			type: e.type,
+			x: e.pageX,
+			y: e.pageY
+		};
+		window.parent.postMessage(data, origin);
+	};
+
+	window.addEventListener('click', broadcastElementEvent, false);
+	window.addEventListener('mouseover', broadcastElementEvent, false);
+	window.addEventListener('mouseout', broadcastCursorEvent, false);
 
 }());
 </script>
