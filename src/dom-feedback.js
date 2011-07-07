@@ -1,28 +1,38 @@
-/*!
+/** @preserve
+ *
  * DOM Feedback Tool
- * --
+ *
  * @version 0.1
- * @author Jan Kuča <jan@jankuca.com>, http://jankuca.com
- * @licence Creative Commons 3.0 Attribution/Share-alike Licence
+ * @author Jan Kuca <jan@jankuca.com>, http://jankuca.com
+ * @license Creative Commons 3.0 Attribution/Share-alike Licence
  *
  */
 
-/**
-@interface IDOMFeedback {
-	IDOMFeedback(Element area)
-
-	void init()
-}
-*/
 
 (function (global) {
 	"use strict";
 
 
+	/**
+	 * @interface
+	 */
+	function IDOMFeedback() {}
+	IDOMFeedback.prototype.init = function () {}
+
+
+	/**
+	 * The feedback tool
+	 *
+	 * @constructor
+	 * @implements IDOMFeedback
+	 */
 	var DOMFeedback = function () {
 	};
 
-	DOMFeedback.prototype.init = function () {
+	/**
+	 * Initializes the tool
+	 */
+	DOMFeedback.prototype['init'] = function () {
 		this._width = document.documentElement.scrollWidth;
 		this._height = Math.max(
 			window.innerHeight,
@@ -43,7 +53,6 @@
 	
 		var snapshot = document.documentElement.innerHTML;
 		snapshot = snapshot.replace(/\s(type|href)="?(\.\.?|\/)/gi, function (a) {
-			console.log(a);
 			var m = a.match(/(\s)(type|href)=("?)(\.\.?|\/)/i);
 			return [m[1], m[2], '=', m[3], dir, m[4]].join('');
 		});
@@ -151,6 +160,6 @@
 	};
 
 
-	global.DOMFeedback = DOMFeedback;
+	global['DOMFeedback'] = DOMFeedback;
 
 }(window));
