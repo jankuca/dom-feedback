@@ -295,7 +295,7 @@
 	MaskLayer.prototype.clear = function () {
 		this.ctx.globalCompositeOperation = 'destination-out';
 		this.ctx.fillStyle = '#000000';
-		this.ctx.fillRect(0, 0, this.canvas.height, this.canvas.width);
+		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	};
 
 	/**
