@@ -25,7 +25,9 @@
 <script>
 (function () {
 
-	var domFeedback = new DOMFeedback();
+	var domFeedback = new DOMFeedback({
+		'broadcast': '../src/dom-feedback-copy.html'
+	});
 
 	var button = document.createElement('span');
 	button.className = 'dom-feedback-button';

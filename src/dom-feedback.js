@@ -15,8 +15,9 @@
 
 	/**
 	 * @interface
+	 * @param {?Object} params Parameters
 	 */
-	function IDOMFeedback() {}
+	function IDOMFeedback(params) {}
 	IDOMFeedback.prototype.init = function () {}
 
 
@@ -25,8 +26,10 @@
 	 *
 	 * @constructor
 	 * @implements IDOMFeedback
+	 * @param {?Object} params Parameters
 	 */
-	var DOMFeedback = function () {
+	var DOMFeedback = function (params) {
+		this.params = params;
 	};
 
 	/**
@@ -121,7 +124,7 @@
 		iframe.style.border = 'none';
 		iframe.style.opacity = '0';
 		document.body.appendChild(iframe);
-		iframe.src = './dom-feedback-copy.html';
+		iframe.src = this.params['broadcast'];
 		this._copy = iframe;
 		iframe.onload = function () {
 			iframe.contentWindow.document.documentElement.innerHTML = snapshot;
