@@ -29,15 +29,81 @@
 		'broadcast': '../src/dom-feedback-copy.html'
 	});
 
-	var button = document.createElement('span');
-	button.className = 'dom-feedback-button';
-	button.innerHTML = 'Feedback';
-	button.onclick = function () {
-		document.body.removeChild(button);
-		domFeedback.init();
-	};
-	document.body.appendChild(button);
+	var buildPanel = function () {
+		var panel = document.createElement('div');
+		panel.className = 'dom-feedback-panel';
 
+		var header = document.createElement('div');
+		header.className = 'header';
+		header.innerHTML = 'Feedback';
+		panel.appendChild(header);
+
+		var content = document.createElement('div');
+		content.className = 'content';
+		content.appendChild(buildToolList());
+		var text = document.createElement('p');
+		text.innerHTML = 'You can highlight the areas relevant to the issue and blacken any personal info.';
+		content.appendChild(text);
+		panel.appendChild(content);
+
+		return panel;
+	};
+
+	var buildToolList = function () {
+		var tool_list = document.createElement('ul');
+		tool_list.className = 'tools';
+		tool_list.onclick = function (e) {
+			var tool = e.target;
+			if (tool.tagName !== 'LI') {
+				if (tool.parentNode.tagName === 'LI') {
+					tool = tool.parentNode;
+				} else {
+					return;
+				}
+				if (tool === active_tool) return;
+			}
+			domFeedback.setTool(tool.ref);
+			active_tool.className = active_tool.className.split(' ')[0];
+			tool.className += ' active';
+			active_tool = tool;
+		};
+
+		var active_tool = null;
+
+		var tool = document.createElement('li');
+		active_tool = tool;
+		tool.ref = DOMFeedback.Tools.HIGHLIGHTER;
+		tool.className = 'highlighter active';
+		tool.innerHTML = 'Highlighter';
+		tool_list.appendChild(tool);
+
+		var tool = document.createElement('li');
+		tool.ref = DOMFeedback.Tools.BLACKENER;
+		tool.className = 'blackener';
+		tool.innerHTML = 'Blackener';
+		tool_list.appendChild(tool);
+
+		return tool_list;
+	};
+
+	var buildButton = function () {
+		var button = document.createElement('span');
+		button.className = 'dom-feedback-button';
+		button.innerHTML = 'Feedback';
+		button.onclick = function () {
+			document.body.removeChild(button);
+			domFeedback.init(function () {
+				document.body.appendChild(panel);
+			});
+		};
+
+		return button;
+	};
+
+	var button = buildButton();
+	var panel = buildPanel();
+
+	document.body.appendChild(button);
 }());
 </script>
 </body>

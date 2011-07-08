@@ -7,6 +7,7 @@ body {
 	bottom: 0;
 	padding: 10px 16px;
 	border-color: #AAA;
+	border-color: rgba(0, 0, 0, 0.2);
 	border-style: solid;
 	border-width: 1px 0 0 1px;
 	border-top-left-radius: 3px;
@@ -21,6 +22,110 @@ body {
 }
 .dom-feedback-button:hover {
 	background-color: #F5F5F5;
-	background-image: -webkit-linear-gradient(top, #F5F5F5, #E5E5E5);
+	background-image: -webkit-linear-gradient(top, #F5F5F5, #DDD);
 	color: #222;
+}
+.dom-feedback-panel {
+	position: fixed;
+	right: 10px;
+	bottom: 0;
+	width: 200px;
+	border-color: #777;
+	border-color: rgba(0, 0, 0, 0.2);
+	border-style: solid;
+	border-width: 1px 1px 0 1px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 0 10px;
+	font-size: 12px;
+}
+.dom-feedback-panel .header {
+	padding: 6px 10px;
+	border-bottom: 1px solid #CCC;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	background-color: #EEE;
+	background-image: -webkit-linear-gradient(top, #EEE, #DDD);
+	box-shadow: #FFF 0 1px 0 inset;
+	color: #555;
+	font-weight: bold;
+	cursor: pointer;
+}
+.dom-feedback-panel .content {
+	padding: 10px;
+	background-color: #FFF;
+}
+.dom-feedback-panel ul {
+	float: left;
+	margin: 0;
+	padding: 0;
+	height: 30px;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+}
+.dom-feedback-panel .tools li {
+	float: left;
+	display: inline;
+	position: relative;
+	height: 24px;
+	line-height: 24px;
+	padding: 0 10px 6px;
+	border-left: 1px solid #CCC;
+	background-color: #EEE;
+	background-image: -webkit-linear-gradient(top, #EEE, #DDD);
+	background-clip: padding-box;
+	box-shadow: #FFF 0 1px 0 inset;
+	color: #555;
+	text-align: center;
+	cursor: default;
+}
+.dom-feedback-panel .tools li:hover {
+	background-color: #F5F5F5;
+	background-image: -webkit-linear-gradient(top, #F5F5F5, #DDD);
+}
+.dom-feedback-panel .tools .highlighter:after {
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	bottom: 5px;
+	height: 4px;
+	background-color: #FFA;
+	content: '';
+}
+.dom-feedback-panel .tools .blackener:after {
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	bottom: 5px;
+	height: 4px;
+	background-color: #333;
+	content: '';
+}
+.dom-feedback-panel .tools li:first-child {
+	border-left: 0;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+.dom-feedback-panel .tools li:last-child {
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+.dom-feedback-panel .tools .active,
+.dom-feedback-panel .tools .active:hover {
+	height: 25px;
+	line-height: 25px;
+	padding-bottom: 5px;
+	background-color: #DDD;
+	background-image: -webkit-linear-gradient(top, #CCC, #DDD);
+	box-shadow: #AAA 0 1px 0 inset;
+	color: #222;
+}
+.dom-feedback-panel .tools .active:after {
+	bottom: 4px;
+}
+.dom-feedback-panel p {
+	clear: left;
+	padding-top: 10px;
+	color: #888;
+	font-size: 11px;
 }

@@ -25,6 +25,13 @@
 	 */
 	IDOMFeedback.prototype['init'] = function (callback) {};
 
+	/**
+	 * Activates the given tool
+	 *
+	 * @param {DOMFeedback.Tools} tool ID of the tool to activate
+	 */
+	IDOMFeedback.prototype['setTool'] = function (tool) {};
+
 
 	/**
 	 * @interface
@@ -52,6 +59,13 @@
 	 * @param {Object} window The window of which to take snapshots
 	 */
 	function IDOMSnapshot(window) {}
+
+	/**
+	 * Returns a list of class names of the root <html> element
+	 *
+	 * @return {Array} A list of class names
+	 */
+	IDOMSnapshot.prototype.getRootClassNames = function () {};
 
 	/**
 	 * Returns an unsafe snapshot
@@ -107,13 +121,19 @@
 			document.documentElement.scrollHeight
 		);
 
-		var snapshot = this.takeSnapshot();
+		var snap = this.takeSnapshot();
 
 		this.mask = new MaskLayer(width, height, this.params.mask);
 
 		this.broadcast = new BroadcastLayer(width, height);
-		this.broadcast.load(this.params.broadcast, snapshot);
+		this.broadcast.load(this.params.broadcast, snap[0], snap[1], callback);
 		this.listenToBroadcast();
+
+		this.tool = DOMFeedback.Tools.HIGHLIGHTER;
+	};
+
+	DOMFeedback.prototype['setTool'] = function (tool) {
+		this.tool = tool;
 	};
 
 	/**
@@ -139,7 +159,8 @@
 		var onmouseover = function (data) {
 			var area = [
 				data.offsetX - 5, data.offsetY - 5,
-				data.width + 10, data.height + 10
+				data.width + 10, data.height + 10,
+				(that.tool === DOMFeedback.Tools.BLACKENER)
 			];
 			if (that.tool === DOMFeedback.Tools.HIGHLIGHTER
 				|| that.tool === DOMFeedback.Tools.BLACKENER) {
@@ -171,9 +192,14 @@
 	 * Requests a snapshot
 	 *
 	 * @protected
+	 * @return {Array.<string, Array>} The snapshot
 	 */
 	DOMFeedback.prototype.takeSnapshot = function () {
-		return new DOMSnapshot(global).getSafe();
+		var snapshot = new DOMSnapshot(global);
+		return [
+			snapshot.getSafe(),
+			snapshot.getRootClassNames()
+		];
 	};
 
 
@@ -203,6 +229,9 @@
 		this.fill();
 	};
 
+	/**
+	 * Restores the original filling and all highlights and blackenings
+	 */
 	MaskLayer.prototype.restore = function () {
 		this.clear();
 		this.fill();
@@ -264,15 +293,26 @@
 
 	/**
 	 * Temporarily cuts a semi-transparent rectangle
+	 *
+	 * @param {number} x Top-left corner position (x coordinate)
+	 * @param {number} y Top-left corner position (y coordinate)
+	 * @param {number} width Width of the rectangle
+	 * @param {number} height Height of the rectangle
+	 * @param {boolean=} blacken Black rather than white
 	 */
-	MaskLayer.prototype.focus = function (x, y, width, height) {
-		this.ctx.globalCompositeOperation = 'destination-out';
+	MaskLayer.prototype.focus = function (x, y, width, height, blacken) {
+		this.ctx.globalCompositeOperation = blacken ? 'source-over' : 'destination-out';
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		this.rectangle(x, y, width, height);
 	};
 
 	/**
 	 * Draws a rounded rectangle
+	 *
+	 * @param {number} x Top-left corner position (x coordinate)
+	 * @param {number} y Top-left corner position (y coordinate)
+	 * @param {number} width Width of the rectangle
+	 * @param {number} height Height of the rectangle
 	 */
 	MaskLayer.prototype.rectangle = function (x, y, width, height) {
 		var ctx = this.ctx;
@@ -349,8 +389,11 @@
 	 * Loads a file of the given path into the layer
 	 *
 	 * @param {string} path A path
+	 * @param {string} html HTML input
+	 * @param {Array} class_names A list of class names of the root <html> element
+	 * @param {function()} callback Callback function to be called after the load
 	 */
-	BroadcastLayer.prototype.load = function (path, snapshot) {
+	BroadcastLayer.prototype.load = function (path, html, class_names, callback) {
 		var self  = this;
 		var iframe = this.iframe;
 
@@ -361,8 +404,13 @@
 
 		iframe.src = path;
 		iframe.onload = function () {
-			iframe.contentWindow.document.documentElement.innerHTML = snapshot;
+			var root = iframe.contentWindow.document.documentElement;
+			root.className = class_names.join(' ');
+			root.innerHTML = html;
 			global.addEventListener('message', onmessage, false);
+			if (typeof callback === 'function') {
+				callback();
+			}
 		};
 	};
 
@@ -376,6 +424,29 @@
 	 */
 	var DOMSnapshot = function (window) {
 		this.window = window;
+	};
+
+	/**
+	 * Returns a list of class names of the root <html> element
+	 *
+	 * @return {Array} A list of class names
+	 */
+	DOMSnapshot.prototype.getRootClassNames = function () {
+		var root = this.window.document.documentElement;
+		if (root.classList) {
+			return Array.prototype.slice.call(root.classList);
+		}
+		if (root.className) {
+			var list = root.className.split(/\s+/);
+			var out = [];
+			for (var i = list, ii = list.length; i < ii; ++i) {
+				if (list[i]) {
+					out.push(list[i]);
+				}
+			}
+			return out;
+		}
+		return [];
 	};
 
 	/**
