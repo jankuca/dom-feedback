@@ -223,8 +223,7 @@
 		this.color = color;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
-		this.highlights = [];
-		this.blackenings = [];
+		this.areas = [];
 
 		this.fill();
 	};
@@ -236,20 +235,17 @@
 		this.clear();
 		this.fill();
 
-		var highlights = this.highlights;
-		var highlight;
-		for (var i = 0, ii = highlights.length; i < ii; ++i) {
-			highlight = highlights[i];
-			this.highlight.call(this, highlight[0], highlight[1],
-				highlight[2], highlight[3], true);
-		}
-
-		var blackenings = this.blackenings;
-		var blackening;
-		for (var i = 0, ii = blackenings.length; i < ii; ++i) {
-			blackening = blackenings[i];
-			this.blacken.call(this, blackening[0], blackening[1],
-				blackening[2], blackening[3], true);
+		var areas = this.areas;
+		var area;
+		for (var i = 0, ii = areas.length; i < ii; ++i) {
+			area = areas[i];
+			if (!area[4]) {
+				this.highlight.call(this, area[0], area[1],
+					area[2], area[3], true);
+			} else {
+				this.blacken.call(this, area[0], area[1],
+					area[2], area[3], true);
+			}
 		}
 	};
 
@@ -268,7 +264,7 @@
 		this.rectangle(x, y, width, height);
 
 		if (!restore) {
-			this.highlights.push([x, y, width, height]);
+			this.areas.push([x, y, width, height, false]);
 		}
 	};
 
@@ -287,7 +283,7 @@
 		this.rectangle(x, y, width, height);
 
 		if (!restore) {
-			this.blackenings.push([x, y, width, height]);
+			this.areas.push([x, y, width, height, true]);
 		}
 	};
 
